@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Principle.Demo.Domain.Serializer
 {
-    public class IdpMetaDataSerializeStrategy : ISerializeStrategy
+    public class IdpMetaDataSerializeStrategy : IPhpSerializeStrategyDecorator
     {
-        public ISerializer Context { get; set; }
+        public IPhpSerializeStrategy Context { get; set; }
 
-        public IdpMetaDataSerializeStrategy(ISerializer serializer)
+        public IdpMetaDataSerializeStrategy(IPhpSerializeStrategy serializer)
         {
             Context = serializer;
         }
@@ -17,14 +17,15 @@ namespace Principle.Demo.Domain.Serializer
         public string Serialize(object obj)
         {
             StringBuilder sb = new StringBuilder();
+            sb.Append(Context.Serialize(obj));
             if (obj is IdpMetaDataResponse)
             {
                 Hashtable array = ConvertMetaDataToHashtable((IdpMetaDataResponse)obj);
                 sb.Append($"a:{array.Count}:{{");
                 foreach (DictionaryEntry entry in array)
                 {
-                    Context.Serialize(entry.Key, sb);
-                    Context.Serialize(entry.Value, sb);
+                    sb.Append(Context.Serialize(entry.Key));
+                    sb.Append(Context.Serialize(entry.Value));
                 }
                 sb.Append("}");
             }

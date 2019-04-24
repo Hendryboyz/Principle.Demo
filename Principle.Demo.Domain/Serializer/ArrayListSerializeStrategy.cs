@@ -3,11 +3,11 @@ using System.Text;
 
 namespace Principle.Demo.Domain.Serializer
 {
-    public class ArrayListSerializeStrategy : ISerializeStrategy
+    public class ArrayListSerializeStrategy : IPhpSerializeStrategyDecorator
     {
-        public ISerializer Context { get; set; }
+        public IPhpSerializeStrategy Context { get; set; }
 
-        public ArrayListSerializeStrategy(ISerializer serializer)
+        public ArrayListSerializeStrategy(IPhpSerializeStrategy serializer)
         {
             Context = serializer;
         }
@@ -15,14 +15,15 @@ namespace Principle.Demo.Domain.Serializer
         public string Serialize(object obj)
         {
             StringBuilder sb = new StringBuilder();
+            sb.Append(Context.Serialize(obj));
             if (obj is ArrayList)
             {
                 ArrayList array = (ArrayList)obj;
                 sb.Append($"a:{array.Count}:{{");
                 for (int key = 0; key < array.Count; key++)
                 {
-                    Context.Serialize(key, sb);
-                    Context.Serialize(array[key], sb);
+                    sb.Append(Context.Serialize(key));
+                    sb.Append(Context.Serialize(array[key]));
                 }
                 sb.Append("}");
             }

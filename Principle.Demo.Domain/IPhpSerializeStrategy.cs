@@ -1,9 +1,7 @@
 ﻿namespace Principle.Demo.Domain
 {
-    public interface ISerializeStrategy
+    public interface IPhpSerializeStrategy
     {
-        ISerializer Context { get; set; }
-
         string Serialize(object obj);
     }
 }

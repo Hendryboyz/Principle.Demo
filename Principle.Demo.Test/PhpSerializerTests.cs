@@ -26,20 +26,6 @@ namespace Principle.Demo.Test
         }
 
         [Test]
-        public void GivenObject_WhenSerialize_ThenReceiveByParseStrategy()
-        {
-            string str = "string";
-            IList<ISerializeStrategy> serializeStrategies = new List<ISerializeStrategy>();
-            ISerializeStrategy fakeStrategy = Substitute.For<ISerializeStrategy>();
-            serializeStrategies.Add(fakeStrategy);
-            serializer = new PhpSerializer(serializeStrategies);
-
-            string result = serializer.Serialize(str);
-
-            fakeStrategy.Received().Serialize(str);
-        }
-
-        [Test]
         public void GivenString_WhenSerialize_ThenReturnParseResult()
         {
             string str = "string";

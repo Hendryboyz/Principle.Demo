@@ -1,17 +1,20 @@
-﻿namespace Principle.Demo.Domain.Serializer
-{
-    public class DefaultSerializeStrategy : ISerializeStrategy
-    {
-        public ISerializer Context { get; set; }
+﻿using System.Text;
 
-        public DefaultSerializeStrategy(ISerializer serializer)
+namespace Principle.Demo.Domain.Serializer
+{
+    public class DefaultSerializeStrategy : IPhpSerializeStrategy
+    {
+        public DefaultSerializeStrategy()
         {
-            Context = serializer;
         }
 
         public string Serialize(object obj)
         {
-            if (obj is string)
+            if (obj is null)
+            {
+                return "N;";
+            }
+            else if (obj is string)
             {
                 string str = obj as string;
                 return $"s:{str.Length}:\"{str}\";";

@@ -3,11 +3,11 @@ using System.Text;
 
 namespace Principle.Demo.Domain.Serializer
 {
-    public class HashtableSerializeStrategy : ISerializeStrategy
+    public class HashtableSerializeStrategy : IPhpSerializeStrategyDecorator
     {
-        public ISerializer Context { get; set; }
+        public IPhpSerializeStrategy Context { get; set; }
 
-        public HashtableSerializeStrategy(ISerializer serializer)
+        public HashtableSerializeStrategy(IPhpSerializeStrategy serializer)
         {
             Context = serializer;
         }
@@ -15,14 +15,15 @@ namespace Principle.Demo.Domain.Serializer
         public string Serialize(object obj)
         {
             StringBuilder sb = new StringBuilder();
+            sb.Append(Context.Serialize(obj));
             if (obj is Hashtable)
             {
                 Hashtable array = (Hashtable)obj;
                 sb.Append($"a:{array.Count}:{{");
                 foreach (DictionaryEntry entry in array)
                 {
-                    Context.Serialize(entry.Key, sb);
-                    Context.Serialize(entry.Value, sb);
+                    sb.Append(Context.Serialize(entry.Key));
+                    sb.Append(Context.Serialize(entry.Value));
                 }
                 sb.Append("}");
             }
