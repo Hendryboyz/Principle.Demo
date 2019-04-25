@@ -1,6 +1,6 @@
 namespace Principle.Demo.Domain.Staff
 {
-    public class Manager : Employee
+    public class Manager : BaseEmployee, IManager
     {
         public Manager(string name, string address)
             : base(name, address)
@@ -14,7 +14,7 @@ namespace Principle.Demo.Domain.Staff
             Salary = baseAmount + (rank * 4);
         }
 
-        public virtual string ReviewPreformance()
+        public string ReviewPreformance()
         {
             return "Everybody do the work very well.";
         }

@@ -1,24 +1,14 @@
 namespace Principle.Demo.Domain.Staff
 {
-    public class Employee
+    public class Employee : BaseEmployee
     {
-        public Employee(string name, string address)
+        public Employee(string name, string address) 
+            : base(name, address)
         {
-            Name = name;
-            Address = address;
+            
         }
 
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public decimal Salary { get; set; }
-        public Employee Manager { get; private set; } = null;
-
-        public virtual void AssignManager(Employee manager)
-        {
-            Manager = manager;            
-        }
-
-        public virtual void CalculatePerHourRate(int rank)
+        public override void CalculatePerHourRate(int rank)
         {
             decimal baseAmount = 12.50M;
 

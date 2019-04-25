@@ -2,29 +2,34 @@ using System;
 
 namespace Principle.Demo.Domain.Staff
 {
-    public class CEO : Manager
+    public class CEO : IEmployee, IManager
     {
-        public CEO(string name, string address) 
-            : base(name, address)
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public decimal Salary { get; set; }
+
+        public CEO(string name, string address)
         {
+            Name = name;
+            Address = address;
         }
 
-        public override void AssignManager(Employee manager)
-        {
-            throw new InvalidOperationException("I don't need a manager");           
-        }
 
-
-        public override void CalculatePerHourRate(int rank)
+        public void CalculatePerHourRate(int rank)
         {
             decimal baseAmount = 150M;
 
             Salary = baseAmount * rank;
         }
 
-        public override string ReviewPreformance()
+        public string ReviewPreformance()
         {
-            throw new InvalidOperationException("this is not my business");
+            return "good job";
+        }
+
+        public void FireSomeone()
+        {
+            Console.WriteLine("You are fired");
         }
     }
 }

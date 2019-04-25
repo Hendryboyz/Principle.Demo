@@ -1,5 +1,6 @@
 using FluentAssertions;
 using NUnit.Framework;
+using Principle.Demo.Domain;
 using Principle.Demo.Domain.Staff;
 
 namespace Principle.Demo.Test
@@ -10,13 +11,13 @@ namespace Principle.Demo.Test
         [Test]
         public void CanCreateEmployee()
         {
-            Employee employee = NewEmployee();
+            IEmployee employee = NewEmployee();
             employee.Should().NotBeNull();
             employee.Name.Should().Be("user");
             employee.Address.Should().Be("home");
         }
 
-        private Employee NewEmployee()
+        private BaseEmployee NewEmployee()
         {
             return new Employee("user", "home");
         }
@@ -25,32 +26,28 @@ namespace Principle.Demo.Test
         [Test]
         public void GivenEmployee_WhenAssignManager_ThenManagerBeSetting()
         {
-            Employee employee = NewEmployee();
+            IManaged employee = NewEmployee();
 
-            Employee manager = NewManager();
+            IEmployee manager = new Manager("manager", "company");
             employee.AssignManager(manager);
 
             employee.Manager.Should().NotBeNull();
-            Employee destManager = employee.Manager;
+            IEmployee destManager = employee.Manager;
             destManager.Name.Should().Be("manager");
             destManager.Address.Should().Be("company");
         }
 
-        private Manager NewManager()
-        {
-            return new Manager("manager", "company");
-        }
 
         [Test]
         public void GivenManager_WhenAssignManager_ThenManagerBeSetting()
         {
-            Employee manager = NewManager();
+            IManaged manager = new Manager("manager", "company");
 
-            Employee ceo = NewCEO();
+            IEmployee ceo = NewCEO();
             manager.AssignManager(ceo);
 
             manager.Manager.Should().NotBeNull();
-            Employee destManager = manager.Manager;
+            IEmployee destManager = manager.Manager;
             destManager.Name.Should().Be("ceo");
             destManager.Address.Should().Be("toilet");
         }
@@ -63,7 +60,7 @@ namespace Principle.Demo.Test
         [Test]
         public void GivenEmployee_WhenCalculatePerHourRate_ThenPerHourRate()
         {
-            Employee employee = NewEmployee();
+            IEmployee employee = NewEmployee();
 
             employee.CalculatePerHourRate(2);
 
@@ -73,7 +70,7 @@ namespace Principle.Demo.Test
         [Test]
         public void GivenManager_WhenCalculatePerHourRate_ThenPerHourRate()
         {
-            Employee employee = NewManager();
+            IEmployee employee = new Manager("manager", "company");
 
             employee.CalculatePerHourRate(2);
 
@@ -83,7 +80,7 @@ namespace Principle.Demo.Test
         [Test]
         public void GivenCEO_WhenCalculatePerHourRate_ThenPerHourRate()
         {
-            Employee employee = NewCEO();
+            IEmployee employee = NewCEO();
 
             employee.CalculatePerHourRate(2);
 
@@ -93,33 +90,19 @@ namespace Principle.Demo.Test
         [Test]
         public void GivenManager_WhenReviewPerformance_ThenReturnComment()
         {
-            Manager manager = NewManager();
+            IManager manager = new Manager("manager", "company");
             string comment = manager.ReviewPreformance();
 
             comment.Should().Contain("Everybody do the work very well.");
-        }
-
-        //[Test]
-        public void GivenCEO_WhenAssignManager_ThenManagerBeSetting()
-        {
-            Employee ceo = NewCEO();
-
-            Employee manager = NewManager();
-            ceo.AssignManager(manager);
-
-            ceo.Manager.Should().NotBeNull();
-            Employee destManager = ceo.Manager;
-            destManager.Name.Should().Be("manager");
-            destManager.Address.Should().Be("company");
         }
 
         //[Test]
         public void GivenCEO_WhenReviewPerformance_ThenReturnComment()
         {
-            Manager manager = NewCEO();
+            IManager manager = NewCEO();
             string comment = manager.ReviewPreformance();
 
-            comment.Should().Contain("Everybody do the work very well.");
+            comment.Should().Contain("Good Job.");
         }
     }
 }
