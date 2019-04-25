@@ -8,59 +8,118 @@ namespace Principle.Demo.Test
     public class EmployeeTests
     {
         [Test]
-        public void CanCreateEmployee() 
+        public void CanCreateEmployee()
         {
-            Employee employee = new Employee("user", "home", 1000.0f);
+            Employee employee = NewEmployee();
             employee.Should().NotBeNull();
             employee.Name.Should().Be("user");
             employee.Address.Should().Be("home");
-            employee.Salary.Should().Be(1000.0f);
         }
 
-        
+        private Employee NewEmployee()
+        {
+            return new Employee("user", "home");
+        }
+
+
         [Test]
         public void GivenEmployee_WhenAssignManager_ThenManagerBeSetting()
         {
-            Employee employee = new Employee("user", "home", 1000.0f);
-            
-            Employee manager = new Manager("manager", "company", 2000.0f);
+            Employee employee = NewEmployee();
+
+            Employee manager = NewManager();
             employee.AssignManager(manager);
 
             employee.Manager.Should().NotBeNull();
             Employee destManager = employee.Manager;
             destManager.Name.Should().Be("manager");
             destManager.Address.Should().Be("company");
-            destManager.Salary.Should().Be(2000.0f);
+        }
+
+        private Manager NewManager()
+        {
+            return new Manager("manager", "company");
         }
 
         [Test]
         public void GivenManager_WhenAssignManager_ThenManagerBeSetting()
         {
-            Employee manager = new Manager("manager", "company", 2000.0f);
-            
-            Employee ceo = new CEO("ceo", "toilet", 3000.0f);
+            Employee manager = NewManager();
+
+            Employee ceo = NewCEO();
             manager.AssignManager(ceo);
 
             manager.Manager.Should().NotBeNull();
             Employee destManager = manager.Manager;
             destManager.Name.Should().Be("ceo");
             destManager.Address.Should().Be("toilet");
-            destManager.Salary.Should().Be(3000.0f);
+        }
+
+        private CEO NewCEO()
+        {
+            return new CEO("ceo", "toilet");
         }
 
         [Test]
+        public void GivenEmployee_WhenCalculatePerHourRate_ThenPerHourRate()
+        {
+            Employee employee = NewEmployee();
+
+            employee.CalculatePerHourRate(2);
+
+            employee.Salary.Should().BeGreaterThan(0);
+        }
+
+        [Test]
+        public void GivenManager_WhenCalculatePerHourRate_ThenPerHourRate()
+        {
+            Employee employee = NewManager();
+
+            employee.CalculatePerHourRate(2);
+
+            employee.Salary.Should().BeGreaterThan(0);
+        }
+
+        [Test]
+        public void GivenCEO_WhenCalculatePerHourRate_ThenPerHourRate()
+        {
+            Employee employee = NewCEO();
+
+            employee.CalculatePerHourRate(2);
+
+            employee.Salary.Should().BeGreaterThan(0);
+        }
+
+        [Test]
+        public void GivenManager_WhenReviewPerformance_ThenReturnComment()
+        {
+            Manager manager = NewManager();
+            string comment = manager.ReviewPreformance();
+
+            comment.Should().Contain("Everybody do the work very well.");
+        }
+
+        //[Test]
         public void GivenCEO_WhenAssignManager_ThenManagerBeSetting()
         {
-            Employee ceo = new CEO("ceo", "toilet", 3000.0f);
+            Employee ceo = NewCEO();
 
-            Employee manager = new Manager("manager", "company", 2000.0f);
+            Employee manager = NewManager();
             ceo.AssignManager(manager);
 
             ceo.Manager.Should().NotBeNull();
             Employee destManager = ceo.Manager;
             destManager.Name.Should().Be("manager");
             destManager.Address.Should().Be("company");
-            destManager.Salary.Should().Be(3000.0f);
+        }
+
+        //[Test]
+        public void GivenCEO_WhenReviewPerformance_ThenReturnComment()
+        {
+            Manager manager = NewCEO();
+            string comment = manager.ReviewPreformance();
+
+            comment.Should().Contain("Everybody do the work very well.");
         }
     }
 }
